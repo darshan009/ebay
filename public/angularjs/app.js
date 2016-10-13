@@ -60,6 +60,14 @@ var ebay = angular.module('ebay', ['ui.router']);
 ebay.controller('profile', function($scope, $http){
   console.log("in controller");
   // console.log($scope.quantityEntered);
+  $scope.creditCardMessage = true;
+  //verify credit card number
+  // if(($scope.creditCardNumberVerify).toString().length == 16)
+  //   $scope.creditCardNumberVerifySuccess = true;
+  // else {
+  //   $scope.creditCardNumberVerifySuccess = false;
+  // }
+
 
   //pre load the personal details here
 
@@ -134,18 +142,23 @@ ebay.controller('profile', function($scope, $http){
     console.log("--------checkout------");
     // console.log(quantityEntered);
     // console.log($scope.quantityEntered);
-    $http({
-      method : "POST",
-      url : '/checkout',
-      data : {
-        "quantityEntered" : $scope.quantityEntered
-      }
-    }).success(function(data) {
-      console.log("in removeRow success");
-      loadShoppingCart();
-    }).error(function(error) {
-      console.log("Error posting data");
-    });
+    console.log($scope.creditCardNumberVerify);
+    if($scope.creditCardNumberVerify.toString().length == 16) {
+      $http({
+        method : "POST",
+        url : '/checkout',
+        data : {
+          "quantityEntered" : $scope.quantityEntered
+        }
+      }).success(function(data) {
+        console.log("in removeRow success");
+        loadShoppingCart();
+      }).error(function(error) {
+        console.log("Error posting data");
+      });
+    }else {
+      alert("credti card number invalid");
+    }
   };
 
   //loads user Advertisement
