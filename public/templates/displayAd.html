@@ -1,0 +1,43 @@
+<div class="rmd-container" ng-controller="profile">
+    <div class="container-fluid">
+      <div class="container">
+        <div class="col-md-6 col-lg-4" style="border-left: 10px solid; float: right">
+          <h3> Shopping Cart </h1>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat = "eachAd in shoppingCart">
+                  <td> {{eachAd.name}}</td>
+                  <td> {{eachAd.quantityEntered}}</td>
+                  <td><button class="btn btn-primary" ng-click="removeRow(eachAd.id)">Remove</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <button class="btn btn-primary" ui-sref="payment">Checkout</button>
+        </div>
+      </div>
+      <hr>
+      <h3> Choose a product to buy </h1></br>
+      <div class="row">
+        <div class="col-md-6 col-lg-3" ng-repeat="adContent in allAds" style="border-style: inset">
+
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">{{adContent.name}}</h4>
+              <p class="card-text">Quantity - {{adContent.quantity}}</p>
+              <p class="card-text">Details - {{adContent.specification}}</p>
+              <p class="card-text">Shipping from - {{adContent.shipping}}</p>
+              Enter your quantity: <input type="number" class="form-control col-xs-8"  ng-model="quantityEntered" value="1">
+              <a href="#" class="btn btn-primary" ng-click="addToCart(adContent.id, quantityEntered)">Add to Cart</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</div>

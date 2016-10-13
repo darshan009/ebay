@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ebay</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet"
+    	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet"
+    	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <script
+    	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script
+    	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+    <script
+    	src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <!-- Loading the AngularJS file from /public/angularJS folder -->
+    <script src="angularjs/app.js"></script>
+  </head>
+  <body ng-app="ebay">
+    <h1> Your profile </h1>
+    <div class="row" ng-controller="profile">
+      <div class="col-sm-3">
+        <div class="list-group">
+          <!-- <a ui-sref="personalDetails" href="#" class="list-group-item">Personal Details</a>
+          <a ui-sref="profile.sellItems" href="#" class="list-group-item">Sell Items</a>
+          <hr>
+          <a ui-sref="profile.buyItems" href="#" class="list-group-item">Buy Items</a> -->
+          <hr>
+          <a ng-click="personalDetails = true; itemSold = false; loadAdDiv = false; sellItems = false; itemsPurchased = false" href="#" class="list-group-item">Personal Details</a>
+          <hr>
+          <a ng-click="loadAd(); itemSold = false; loadAdDiv = true; sellItems = false; personalDetails = false; itemsPurchased = false;" href="#" class="list-group-item">All Advertisement</a>
+          <a ng-click="sellItems = true; itemSold = false; loadAdDiv = false; personalDetails = false; itemsPurchased = false" href="#" class="list-group-item">Add Advertisement</a>
+          <hr>
+          <a ng-click="purchasedAd(); itemSold = false; itemsPurchased = true; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items purchased</a>
+          <a ng-click="soldItems(); itemSold = true; itemsPurchased = false; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items sold</a>
+        </div>
+      </div>
+      <!-- <div class="col-sm-9" ui-view="contentDisplay">
+        <h1> hi </h1>
+      </div> -->
+      <div class="col-sm-9">
+        <div ng-include="personalDetails ? 'templates/profile/personalDetails.html': ''"></div>
+        <div ng-include="sellItems ? 'templates/profile/sellItems.html': ''"></div>
+        <div ng-include="loadAdDiv ? 'templates/profile/loadAd.html': ''"></div>
+        <div ng-include="itemsPurchased ? 'templates/profile/itemsPurchased.html': ''"></div>
+        <div ng-include="itemSold ? 'templates/profile/soldItems.html': ''"></div>
+      </div>
+    </div>
+    <!-- <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid"> -->
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <!-- <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Ebay</a>
+        </div>
+          <ul class="nav navbar-nav navbar-right">
+            <% if(!user) {%><li><a href="#">Login</a></li><%}%>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <% if(user) {%><%= user.firstName %> <%= user.lastName %><%}%>
+                <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+              </ul>
+            </li>
+          </ul> -->
+        <!-- </div><!-- /.navbar-collapse -->
+      <!-- </div><!-- /.container-fluid -->
+    <!-- </nav> -->
+
+    <!-- <div class="container-fluid" ng-controller="profile">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="#" ng-click = "changeView('1')">Personal Details</a></li>
+            <li><a href="#" ng-click = "changeView('2')">Sell Item</a></li>
+            <li><a href="#" ng-click = "changeView('3')">Buy Item</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-6 col-sm-offset-3 col-md-10 main">
+          <div id="viewDiv"></div>
+          <div ui-view=""></div>
+        </div>
+      </div>
+    </div> -->
+
+  </body>
+</html>

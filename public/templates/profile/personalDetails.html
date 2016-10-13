@@ -1,0 +1,29 @@
+<div class="rmd-container">
+  <h1> Your details </h1>
+  <form class="form-horizontal" method="POST">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">First Name:</label>
+      <div class="col-sm-3">
+        <input type="text" class="form-control" value="{{firstName}}" ng-model="firstName">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Last Name:</label>
+      <div class="col-sm-3">
+        <input type="text" class="form-control" value="{{lastName}}" ng-model="lastName">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Email:</label>
+      <div class="col-sm-3">
+        <input type="text" class="form-control" value="{{email}}" ng-model="email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Email:</label>
+      <div class="col-sm-3">
+        <button type="submit" class="btn btn-primary btn-block">Apply Changes</button>
+      </div>
+    </div>
+  </form>
+</div>
