@@ -1,10 +1,12 @@
 var pool = require('../config/db'),
     passport = require('passport'),
     passportImport = require('../config/passport'),
-    bcrypt = require('bcrypt-nodejs');
+    bcrypt = require('bcrypt-nodejs'),
+    schedule = require('node-schedule');
 
-var connection = require('../config/db');
-
+var j = schedule.scheduleJob('42 * * * *', function(){
+      console.log('The answer to life, the universe, and everything!');
+    });
 /*
  * GET users listing.
  */
@@ -30,29 +32,30 @@ exports.login = function(req, res) {
 exports.postLogin = function(req, res, next) {
   var email = req.body.email,
       password = req.body.password;
-  connection.query("SELECT * FROM Users WHERE email =?", email, function(err, rows){
-    if(err)
-      console.log(err);
-    if(!rows)
-      res.end("Sorry your email id is not registered");
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Users WHERE email =?", email, function(err, rows){
+      if(err)
+        console.log(err);
+      if(!rows)
+        res.end("Sorry your email id is not registered");
 
-    //decrypt and authenticate
-    passport.authenticate('local', { successRedirect: '/',
-                          failureRedirect: '/signup'}, function(err, user, info){
-      if (err)
-        return console.log(err);;
-      if(!user)
-        res.redirect('/login');
-      return req.logIn(user,function(err){
-        if(err)
-          return next(err);
-        console.log("user is loggied in");
-        req.session.shoppingCart = [];
-        connection.release();
-        res.redirect('/');
-      });
-    })(req, res, next);
-
+      //decrypt and authenticate
+      passport.authenticate('local', { successRedirect: '/',
+                            failureRedirect: '/signup'}, function(err, user, info){
+        if (err)
+          return console.log(err);;
+        if(!user)
+          res.redirect('/login');
+        return req.logIn(user,function(err){
+          if(err)
+            return next(err);
+          console.log("user is loggied in");
+          req.session.shoppingCart = [];
+          connection.release();
+          res.redirect('/');
+        });
+      })(req, res, next);
+    });
   });
 };
 
@@ -117,7 +120,8 @@ exports.postPublishAd = function(req, res){
       shipping : req.param("shipping"),
       price : req.param("price"),
       status : "live",
-      userId : req.user.userId
+      userId : req.user.userId,
+      biddingStatus : req.param("biddingStatus")
     };
   pool.getConnection(function(err, connection){
     connection.query("INSERT INTO Advertisement SET ?", adData, function(err, rows){
@@ -245,4 +249,69 @@ exports.purchasedAd = function(req, res) {
       res.send(rows);
     });
   });
+};
+
+exports.loadSingleAdvertisement = function(req, res) {
+  console.log(req.param("adId"));
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Advertisement WHERE id = ?", req.param("adId"), function(err, rows){
+      if(err)
+        console.log(err);
+      console.log(rows);
+      connection.release();
+      console.log("---------in loadSingleAdvertisement----------");
+      res.send(rows);
+    });
+  });
+};
+
+exports.placeBid = function(req, res) {
+  var bidding = {
+    adId : req.param("adId"),
+    quantity : req.param("quantityEntered"),
+    userId : req.user.userId,
+    biddingValue : req.param("biddingValue")
+  }
+  // var startTime = new Date(Date.now() + 5000),
+  //     endTime = new Date(Date.now() + 10000);
+  // var j = schedule.scheduleJob({ start: startTime, end: endTime, rule: '*/1 * * * * *' }, function(){
+  //   console.log('Time for tea!');
+  //   res.redirect('/updateBiddingAfter');
+  // });
+  pool.getConnection(function(err, connection){
+    connection.query("INSERT INTO Bidding SET ?", bidding, function(err, rows){
+      if(err)
+        console.log(err);
+      console.log(rows);
+      console.log(connection);
+      connection.release();
+      console.log("---------in placeBid----------");
+    });
+  });
+};
+
+// exports.getBids = function(req, res) {
+//   console.log("---------in getBids----------");
+//   var fullData = [];
+//   pool.getConnection(function(err, connection){
+//     connection.query("SELECT * FROM Bidding WHERE userId = ?", req.user.userId, function(err, rows){
+//       if(err)
+//         console.log(err);
+//       console.log("bidding all data");
+//       console.log(rows);
+//       for(var i=0; i<rows.length; i++) {
+//         connection.query("SELECT * FROM Advertisement WHERE id = ?", rows[i].adId, function(err, row){
+//           if(err)
+//             console.log(err);
+//           fullData.push(row[0]);
+//         });
+//       }
+//       console.log(fullData);
+//       res.send(fullData);
+//     });
+//   });
+// };
+
+exports.updateBiddingAfter = function(req, res) {
+  console.log("hello");
 };

@@ -24,16 +24,21 @@
       <hr>
       <h3> Choose a product to buy </h1></br>
       <div class="row">
-        <div class="col-md-6 col-lg-3" ng-repeat="adContent in allAds" style="border-style: inset">
-
+        <div class="col-md-6 col-lg-3" ng-repeat="adContent in allAds" style="display: block; border-style: inset">
           <div class="card">
             <div class="card-block">
-              <h4 class="card-title">{{adContent.name}}</h4>
+              <h4 class="card-title"><b>{{adContent.name}}</b></h4>
               <p class="card-text">Quantity - {{adContent.quantity}}</p>
               <p class="card-text">Details - {{adContent.specification}}</p>
               <p class="card-text">Shipping from - {{adContent.shipping}}</p>
               Enter your quantity: <input type="number" class="form-control col-xs-8"  ng-model="quantityEntered" value="1">
-              <a href="#" class="btn btn-primary" ng-click="addToCart(adContent.id, quantityEntered)">Add to Cart</a>
+              <p class="card-text" ng-if"adContent.biddingStatus == 'true'">
+                Bid: <input type="number" class="form-control col-xs-8"  ng-model="biddingValue" value="1">
+              </p>
+              <p>
+                <a href="#" class="btn btn-primary" ng-click="placeBid(adContent.id, biddingValue, quantityEntered)">Place Bid</a>
+              </p>
+              <a href="#" class="btn btn-primary" ng-if"(adContent.biddingStatus) != 'true'" ng-click="addToCart(adContent.id, quantityEntered)">Add to Cart</a>
             </div>
           </div>
 

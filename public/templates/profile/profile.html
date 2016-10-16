@@ -30,13 +30,14 @@
           <hr>
           <a ui-sref="profile.buyItems" href="#" class="list-group-item">Buy Items</a> -->
           <hr>
-          <a ng-click="personalDetails = true; itemSold = false; loadAdDiv = false; sellItems = false; itemsPurchased = false" href="#" class="list-group-item">Personal Details</a>
+          <a ng-click="personalDetails = true; yourbids = false; itemSold = false; loadAdDiv = false; sellItems = false; itemsPurchased = false" href="#" class="list-group-item">Personal Details</a>
           <hr>
-          <a ng-click="loadAd(); itemSold = false; loadAdDiv = true; sellItems = false; personalDetails = false; itemsPurchased = false;" href="#" class="list-group-item">All Advertisement</a>
-          <a ng-click="sellItems = true; itemSold = false; loadAdDiv = false; personalDetails = false; itemsPurchased = false" href="#" class="list-group-item">Add Advertisement</a>
+          <a ng-click="loadAd(); yourbids = false; itemSold = false; loadAdDiv = true; sellItems = false; personalDetails = false; itemsPurchased = false;" href="#" class="list-group-item">All Advertisement</a>
+          <a ng-click="sellItems = true; yourbids = false; itemSold = false; loadAdDiv = false; personalDetails = false; itemsPurchased = false" href="#" class="list-group-item">Add Advertisement</a>
           <hr>
-          <a ng-click="purchasedAd(); itemSold = false; itemsPurchased = true; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items purchased</a>
-          <a ng-click="soldItems(); itemSold = true; itemsPurchased = false; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items sold</a>
+          <a ng-click="purchasedAd(); yourbids = false; itemSold = false; itemsPurchased = true; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items purchased</a>
+          <a ng-click="soldItems(); yourbids = false; itemSold = true; itemsPurchased = false; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Items sold</a>
+          <!-- <a ng-click="loadBid(); yourbids = true; itemSold = true; itemsPurchased = false; loadAdDiv = false; personalDetails = false; sellItems = false" href="#" class="list-group-item">Your Bids</a> -->
         </div>
       </div>
       <!-- <div class="col-sm-9" ui-view="contentDisplay">
@@ -47,7 +48,7 @@
         <div ng-include="sellItems ? 'templates/profile/sellItems.html': ''"></div>
         <div ng-include="loadAdDiv ? 'templates/profile/loadAd.html': ''"></div>
         <div ng-include="itemsPurchased ? 'templates/profile/itemsPurchased.html': ''"></div>
-        <div ng-include="itemSold ? 'templates/profile/soldItems.html': ''"></div>
+        <!-- <div ng-include="itemSold ? 'templates/profile/getBids.html': ''"></div> -->
       </div>
     </div>
     <!-- <nav class="navbar navbar-default navbar-fixed-top">

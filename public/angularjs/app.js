@@ -31,6 +31,15 @@ var ebay = angular.module('ebay', ['ui.router']);
               },
 			}
 		})
+    .state('advertisement', {
+			url : '/Advertisement',
+			views: {
+              'displayAd': {
+                templateUrl : 'templates/advertisement.html',
+                // controller: 'profile'
+              },
+			}
+		})
     // .state('personalDetails', {
 		// 	url : '',
     //   abstract: true,
@@ -57,7 +66,7 @@ var ebay = angular.module('ebay', ['ui.router']);
 
   });
 
-ebay.controller('profile', function($scope, $http){
+ebay.controller('profile', function($scope, $http, $state){
   console.log("in controller");
   // console.log($scope.quantityEntered);
   $scope.creditCardMessage = true;
@@ -199,6 +208,7 @@ ebay.controller('profile', function($scope, $http){
   };
 
   $scope.publishAd = function(){
+    console.log("-------in publish ad------");
     $http({
       method : "POST",
       url : '/publishAd',
@@ -207,7 +217,8 @@ ebay.controller('profile', function($scope, $http){
         "specification": $scope.specification,
         "quantity": $scope.quantity,
         "shipping": $scope.shipping,
-        "price" : $scope.price
+        "price" : $scope.price,
+        "biddingStatus" : $scope.biddingStatus
       }
     }).success(function(data) {
       $scope.name = '';
@@ -232,5 +243,59 @@ ebay.controller('profile', function($scope, $http){
       console.log("Error posting data");
     });
   };
+  // $scope.helloTest = "no";
+  // $scope.loadAdvertisement = function(adId) {
+  //   console.log("---------in loadSingleAdvertisement----------");
+  //   console.log(adId);
+  //   $scope.helloTest = "lol";
+  //   $http({
+  //     method : "POST",
+  //     url : '/loadSingleAdvertisement',
+  //     data : {
+  //       "adId" : adId
+  //     }
+  //   }).success(function(data) {
+  //     console.log("success in purchasedAd");
+  //     console.log(data);
+  //     $scope.singleAdData = data[0];
+  //     console.log($scope.singleAdData);
+  //     // $state.go('advertisement', {});
+  //   }).error(function(error) {
+  //     console.log("Error posting data");
+  //   });
+  // };
+
+  $scope.placeBid = function(adId, biddingValue, quantityEntered) {
+    $http({
+      method : "POST",
+      url : '/placeBid',
+      data : {
+        "adId" : adId,
+        "quantityEntered" : quantityEntered,
+        "biddingValue" : biddingValue
+      }
+    }).success(function(data) {
+      console.log("success in placeBid");
+      console.log(data);
+      $scope.quantityEntered = "";
+      $scope.biddingValue = "";
+      // $state.go('advertisement', {});
+    }).error(function(error) {
+      console.log("Error posting data");
+    });
+  };
+
+  // $scope.loadBid = function() {
+  //   $http({
+  //     method : "GET",
+  //     url : '/getBids'
+  //   }).success(function(data) {
+  //     console.log("in load Bid");
+  //     console.log(data);
+  //     $scope.loadBid = data;
+  //   }).error(function(error) {
+  //     console.log("Error posting data");
+  //   });
+  // };
 
 });

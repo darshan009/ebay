@@ -71,6 +71,10 @@ app.get('/shoppingCart', user.shoppingCart);
 app.post('/addToCart', user.postShoppingCart);
 app.post('/removeFromCart', user.removeFromCart);
 app.get('/checkout', user.checkout);
+app.post('/loadSingleAdvertisement', user.loadSingleAdvertisement);
+app.post('/placeBid', user.placeBid);
+// app.get('/getBids', user.getBids);
+app.post('/updateBiddingAfter', user.updateBiddingAfter);
 
 // development only
 if ('development' == app.get('env')) {

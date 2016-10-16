@@ -1,0 +1,22 @@
+<div class="rmd-container" ng-controller="profile">
+  <div class="wrapper" style="background-color: #fff;">
+    <div class="col-md-6 col-lg-10" style="display: block; border-style: inset; background-color: #D6DDEA; margin: 20px">
+      <h1> {{helloTest}} </h1>
+      <div class="card">
+        <div class="card-block">
+          <h3 class="card-title">{{singleAdData.name}}</h3>
+          <p class="card-text">Quantity - {{singleAdData.quantity}}</p>
+          <p class="card-text">Details - {{singleAdData.specification}}</p>
+          <p class="card-text">Shipping from - {{singleAdData.shipping}}</p>
+          Enter your quantity: <input type="number" class="form-control col-xs-8"  ng-model="quantityEntered" value="1">
+          <p class="card-text" ng-if"adContent.biddingStatus == true">
+            Bid: <input type="number" class="form-control col-xs-8"  ng-model="quantityEntered" value="1">
+            <a href="#" class="btn btn-primary" ng-click="addToCart(adContent.id, quantityEntered)">Add to Cart</a>
+          </p>
+          <a href="#" class="btn btn-primary" ng-if"adContent.biddingStatus == false" ng-click="addToCart(adContent.id, quantityEntered)">Add to Cart</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
