@@ -145,17 +145,15 @@ ebay.controller('profile', function($scope, $http){
     console.log($scope.creditCardNumberVerify);
     if($scope.creditCardNumberVerify.toString().length == 16) {
       $http({
-        method : "POST",
+        method : "GET",
         url : '/checkout',
-        data : {
-          "quantityEntered" : $scope.quantityEntered
-        }
       }).success(function(data) {
         console.log("in removeRow success");
         loadShoppingCart();
       }).error(function(error) {
         console.log("Error posting data");
       });
+      window.location = '/';
     }else {
       alert("credti card number invalid");
     }

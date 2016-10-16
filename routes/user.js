@@ -1,8 +1,9 @@
-var connection = require('../config/db'),
+var pool = require('../config/db'),
     passport = require('passport'),
     passportImport = require('../config/passport'),
     bcrypt = require('bcrypt-nodejs');
 
+var connection = require('../config/db');
 
 /*
  * GET users listing.
@@ -10,13 +11,14 @@ var connection = require('../config/db'),
 
  exports.userList = function(req, res){
 
-   req.getConnection(function(err, connection){
+   pool.getConnection(function(err, connection){
      if(err)
       console.log(err);
-     var query = connection.query('SELECT * FORM users', function(err, rows){
+     connection.query('SELECT * FORM users', function(err, rows){
        if(err)
          console.log("Selecting error: ", err);
         console.log(rows);
+      connection.release();
        res.render('')
      });
    });
@@ -46,6 +48,7 @@ exports.postLogin = function(req, res, next) {
           return next(err);
         console.log("user is loggied in");
         req.session.shoppingCart = [];
+        connection.release();
         res.redirect('/');
       });
     })(req, res, next);
@@ -80,12 +83,13 @@ exports.postSignUp = function(req, res, next){
             email: email,
             password: hashedPassword
           };
-      connection.query("INSERT INTO Users SET ?", userData, function(err, rows){
-        if(err)
-          console.log(err);
-        console.log("Last insert ID", res.insertId);
-        res.redirect('/login');
-      })
+        connection.query("INSERT INTO Users SET ?", userData, function(err, rows){
+          if(err)
+            console.log(err);
+          console.log("Last insert ID", res.insertId);
+          connection.release();
+          res.redirect('/login');
+        });
     });//end of bcrypt
 
   });
@@ -115,37 +119,44 @@ exports.postPublishAd = function(req, res){
       status : "live",
       userId : req.user.userId
     };
-
-  connection.query("INSERT INTO Advertisement SET ?", adData, function(err, rows){
-    if(err)
-      console.log(err);
-    console.log("Last insert ID", res.insertId);
-    console.log(rows);
-    res.send("success");
+  pool.getConnection(function(err, connection){
+    connection.query("INSERT INTO Advertisement SET ?", adData, function(err, rows){
+      if(err)
+        console.log(err);
+      console.log("Last insert ID", res.insertId);
+      console.log(rows);
+      connection.release();
+      res.send("success");
+    });
   });
-
 };
 
 exports.loadAd = function(req, res) {
   var userId = req.user.userId;
   console.log("in loadAd");
-  connection.query("SELECT * FROM Advertisement WHERE userId = ?", userId, function(err, rows){
-    if(err)
-      console.log(err);
-    console.log("Last insert ID", res.insertId);
-    console.log(rows);
-    res.send(rows);
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Advertisement WHERE userId = ?", userId, function(err, rows){
+      if(err)
+        console.log(err);
+      console.log("Last insert ID", res.insertId);
+      console.log(rows);
+      connection.release();
+      res.send(rows);
+    });
   });
 };
 
 exports.loadAllAd = function(req, res) {
   var userId = req.user.userId;
   console.log("in loadAd");
-  connection.query("SELECT * FROM Advertisement WHERE status = ?", "live", function(err, rows){
-    if(err)
-      console.log(err);
-    console.log(rows);
-    res.send(rows);
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Advertisement WHERE status = ?", "live", function(err, rows){
+      if(err)
+        console.log(err);
+      console.log(rows);
+      connection.release();
+      res.send(rows);
+    });
   });
 };
 
@@ -155,22 +166,25 @@ exports.shoppingCart = function(req, res) {
 };
 
 exports.postShoppingCart = function(req, res) {
-  connection.query("SELECT * FROM Advertisement WHERE id = ?", req.param("adId"), function(err, rows){
-    if(err)
-      console.log(err);
-    console.log(rows);
-    var fullCart = rows[0];
-    fullCart = {
-      name : rows[0].name,
-      specification : rows[0].specification,
-      quantity : rows[0].quantity,
-      shipping : rows[0].shipping,
-      price : rows[0].price,
-      quantityEntered : req.param("quantityEntered")
-    }
-    console.log(fullCart);
-    req.session.shoppingCart.push(fullCart);
-    res.send(fullCart);
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Advertisement WHERE id = ?", req.param("adId"), function(err, rows){
+      if(err)
+        console.log(err);
+      console.log(rows);
+      var fullCart = rows[0];
+      fullCart = {
+        name : rows[0].name,
+        specification : rows[0].specification,
+        quantity : rows[0].quantity,
+        shipping : rows[0].shipping,
+        price : rows[0].price,
+        quantityEntered : req.param("quantityEntered")
+      }
+      console.log(fullCart);
+      req.session.shoppingCart.push(fullCart);
+      connection.release();
+      res.send(fullCart);
+    });
   });
 };
 
@@ -189,41 +203,46 @@ exports.removeFromCart = function(req, res) {
 
 exports.checkout = function(req, res) {
   console.log("-----------checkout-------");
-  console.log(req.param("quantityEntered"));
-  res.send("testing");
-  // for(var i=0; i<req.session.shoppingCart.length; i++) {
-  //   // if(req.session.shoppingCart[i].quantity < req.param(""))
-  //   var purchasedData = {
-  //     userId : req.user.userId,
-  //     name : req.session.shoppingCart[i].name,
-  //     specification : req.session.shoppingCart[i].specification,
-  //     quantity : req.session.shoppingCart[i].quantity,
-  //     shipping : req.session.shoppingCart[i].shipping,
-  //     price : req.session.shoppingCart[i].price
-  //   }
-  //   connection.query("UPDATE Advertisement SET status = ? WHERE id = ?", ["sold", req.session.shoppingCart[i].id], function(err, rows){
-  //     if(err)
-  //       console.log(err);
-  //     console.log("in update Advertisement");
-  //     console.log(rows);
-  //   });
-  //   connection.query("INSERT INTO Purchased SET ?", purchasedData, function(err, rows){
-  //     if(err)
-  //       console.log(err);
-  //     console.log(rows);
-  //   });
-  // }
-  // req.session.shoppingCart = [];
-  // res.send("data");
+  for(var i=0; i<req.session.shoppingCart.length; i++) {
+    // if(req.session.shoppingCart[i].quantity < req.param(""))
+    var purchasedData = {
+      userId : req.user.userId,
+      name : req.session.shoppingCart[i].name,
+      specification : req.session.shoppingCart[i].specification,
+      quantity : req.session.shoppingCart[i].quantity,
+      shipping : req.session.shoppingCart[i].shipping,
+      price : req.session.shoppingCart[i].price
+    }
+    pool.getConnection(function(err, connection){
+      connection.query("UPDATE Advertisement SET status = ?, quantity = ? WHERE id = ?", ["sold", -(purchasedData.quantity), req.session.shoppingCart[i].id], function(err, rows){
+        if(err)
+          console.log(err);
+        console.log("in update Advertisement");
+        console.log(rows);
+        connection.release();
+      });
+      connection.query("INSERT INTO Purchased SET ?", purchasedData, function(err, rows){
+        if(err)
+          console.log(err);
+        console.log(rows);
+        connection.release();
+      });
+    });
+  }
+  req.session.shoppingCart = [];
+  res.send("data");
 };
 
 exports.purchasedAd = function(req, res) {
   var userId = req.user.userId;
   console.log("in purchasedAd");
-  connection.query("SELECT * FROM Purchased WHERE userId = ?", userId, function(err, rows){
-    if(err)
-      console.log(err);
-    console.log(rows);
-    res.send(rows);
+  pool.getConnection(function(err, connection){
+    connection.query("SELECT * FROM Purchased WHERE userId = ?", userId, function(err, rows){
+      if(err)
+        console.log(err);
+      console.log(rows);
+      connection.release();
+      res.send(rows);
+    });
   });
 };

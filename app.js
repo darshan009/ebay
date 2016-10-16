@@ -70,7 +70,7 @@ app.get('/purchasedAd', user.purchasedAd);
 app.get('/shoppingCart', user.shoppingCart);
 app.post('/addToCart', user.postShoppingCart);
 app.post('/removeFromCart', user.removeFromCart);
-app.post('/checkout', user.checkout);
+app.get('/checkout', user.checkout);
 
 // development only
 if ('development' == app.get('env')) {
